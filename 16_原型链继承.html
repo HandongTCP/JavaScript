@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 继承
+
+    // 一、原型链继承，将父类的实例作为子类的原型
+    function Parent() {
+      this.isShow = true
+      this.info = {
+        name: "yhd",
+        age: 18,
+      };
+    }
+    Parent.prototype.getInfo = function() {
+      console.log(this.info);
+      console.log(this.isShow); // true
+    }
+    function Child() {};
+    Child.prototype = new Parent();
+
+    let Child1 = new Child();
+    Child1.info.gender = "男";
+    Child1.getInfo();  // {name: "yhd", age: 18, gender: "男"}
+
+    let child2 = new Child();
+    child2.getInfo();  // {name: "yhd", age: 18, gender: "男"}
+    child2.isShow = false
+    console.log(child2.isShow); // false
+    /**
+     * 优点：
+     * * 1、父类方法可以复用
+     * 缺点：
+     * * 1、父类的所有引用属性（info）会被所有子类共享，更改一个子类的引用属性，其他子类也会受影响
+     * * 2、子类型实例不能给父类型构造函数传参
+     * */ 
+
+
+
+  </script>
+</body>
+</html>

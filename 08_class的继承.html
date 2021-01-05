@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    const Person = class {
+      constructor(params) {
+        this.name = "ran"
+      }
+      say() {
+        console.log(this.name);
+      }
+      counter = 1
+    }
+
+    class User extends Person {
+      name = "dong"
+      constructor() {
+        super()
+
+      }
+      jump() {}
+      increment() {
+        console.log(super.counter)
+      }
+    }
+
+    const p1 = new User()
+    console.log(p1);
+    p1.increment()
+  </script>
+</body>
+
+</html>

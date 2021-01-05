@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    /**
+     * 三、组合继承：组合继承综合了原型链继承和盗用构造函数继承(构造函数继承)，将两者的优点结合了起来
+     *  基本的思路就是使用原型链继承原型上的属性和方法，而通过构造函数继承实例属性
+     *  这样既可以把方法定义在原型上以实现重用，又可以让每个实例都有自己的属性
+     * 
+     * */
+
+    function Parent(name) {
+      this.name = name
+      this.colors = ["red", "blue", "yellow"]
+    }
+    Parent.prototype.sayName = function () {
+      console.log(this.name);
+    }
+    function Child(name, age) {
+      // 继承父类属性
+      Parent.call(this, name)
+
+      this.age = age;
+    }
+    // 继承父类方法
+    Child.prototype = new Parent();
+
+    Child.prototype.sayAge = function () {
+      console.log(this.age);
+    }
+
+    let child1 = new Child("yhd", 19);
+    child1.colors.push("pink");
+    console.log(child1.colors); // ["red", "blue", "yellow", "pink"]
+    child1.sayAge(); // 19
+    child1.sayName(); // "yhd"
+
+    let child2 = new Child("wxb", 30);
+    console.log(child2.colors);  // ["red", "blue", "yellow"]
+    child2.sayAge(); // 30 
+    child2.sayName(); // "wxb"
+
+    /**
+     * 上面例子中，Parent构造函数定义了name,colors两个属性，接着又在他的原型上添加了个sayName()方法。
+     * Child构造函数内部调用了Parent构造函数，同时传入了name参数，
+     * 同时Child.prototype也被赋值为Parent实例，
+     * 然后又在他的原型上添加了个sayAge()方法。
+     * 这样就可以创建 child1，child2两个实例，让这两个实例都有自己的属性，包括colors，同时还共享了父类的sayName方法
+     * */ 
+
+    /**
+     * 优点：
+     * 1、父类的方法可以复用
+     * 2、可以在Child构造函数中向Parent构造函数中传参
+     * 3、父类构造函数中的引用属性不会被共享
+     * */ 
+
+
+  </script>
+</body>
+
+</html>

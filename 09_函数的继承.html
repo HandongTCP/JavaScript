@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    function Person() {
+      this.name = "ran";
+      this.age = 18
+    }
+
+    Person.prototype.say1 = function () { }
+
+    function User() {
+      const p = new Person()
+
+      for (let i in p) {
+        if (p.hasOwnProperty(i)) {
+          this[i] = p[i]
+        }
+        // this[i] = p[i]
+      }
+    }
+    User.prototype.say2 = function () { }
+
+    User.prototype.__proto__ = Person.prototype
+
+
+    const u = new User()
+    console.log(u);
+  </script>
+</body>
+
+</html>

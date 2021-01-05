@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // generator：生成器
+    // 1、普通函数
+    // function foo() {
+    //   console.log("foo");
+    // }
+    // foo();
+
+    // 2、生成器函数的定义
+    // 生成器函数
+    function* foo() {
+      console.log("000");
+      yield "hello";
+      console.log("111");
+      yield "world";
+      console.log("222");
+      yield "han"
+      console.log("333");
+    }
+
+    // iterator：迭代器
+    const result = foo();
+    console.log(result);
+
+    // 3、使用迭代器
+    // 调用一次next，就会消耗一次迭代器
+    // const res1 = result.next();
+    // console.log(res1);
+    // const res2 = result.next();
+    // console.log(res2);
+    // const res3 = result.next();
+    // console.log(res3);
+    // const res4 = result.next();
+    // console.log(res4);
+
+    // 4、
+
+    // 5、练习：定义一个生成器函数，依次可以生成1～10个数字
+    function* generatorNum() {
+      for (let i = 1; i <= 10; i++) {
+        yield i;
+      }
+    }
+    const numIt = generatorNum()
+    // console.log(numIt.next().value);
+
+    // 6、generator和promise一起来使用
+    function* bar() {
+      console.log(111);
+      const result = yield new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("hello resolve generator")
+        }, 3000);
+      })
+      console.log(result);
+    }
+    const it = bar()
+    it.next().value.then(res => {
+      it.next(res)
+    })
+
+  </script>
+</body>
+
+</html>

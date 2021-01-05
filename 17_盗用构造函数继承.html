@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+
+    // 二、盗用构造函数继承(构造函数继承)：在子类构造函数中调用父类构造函数，可以在子类构造函数中使用call()和apply()方法
+
+    // function Parent() {
+    //   this.info = {
+    //     name: "yhd",
+    //     age: 19,
+    //   }
+    // }
+    // function Child() {
+    //   Parent.call(this)
+    // }
+
+    // let child1 = new Child();
+    // child1.info.gender = "男";
+    // console.log(child1.info); // {name: "yhd", age: 19, gender: "男"};
+
+    // let child2 = new Child();
+    // console.log(child2.info); // {name: "yhd", age: 19}
+
+    /**
+     * 通过使用call()或apply()方法，Parent构造函数在为Child的实例创建的新对象的上下文执行了，
+     * 就相当于新的Child实例对象上运行了Parent()函数中的所有初始化代码，结果就是每个实例都有自己的info属性
+     * */
+
+
+    //  1、传递参数
+    // 相比于原型链继承，盗用构造函数的一个优点在于可以在子类构造函数中像父类构造函数传递参数
+    function Parent(name) {
+      this.info = { name: name };
+    }
+    function Child(name) {
+      // 继承自Parent，并传参
+      Parent.call(this, name);
+
+      // 实例属性
+      this.age = 18
+    }
+
+    let child1 = new Child("yhd");
+    console.log(child1.info.name); // "yhd"
+    console.log(child1.age); // 18
+
+    let child2 = new Child("wxb");
+    console.log(child2.info.name); // "wxb"
+    console.log(child2.age); // 18
+
+    /**
+     * 在上面例子中，Parent构造函数接收一个name参数，并将他赋值给一个属性，
+     * 在Child构造函数中调用Parent构造函数时传入这个参数，
+     * 实际上会在Child实例上定义name属性。为确保Parent构造函数不会覆盖Child定义的属性，
+     * 可以在调用父类构造函数之后再给子类实例添加额外的属性
+    */
+
+    /**
+     * 优点：
+     * 1、可以在子类构造函数中向父类传参数
+     * 2、父类的引用属性不会被共享
+     * 缺点：
+     * 1、子类不能访问父类原型上定义的方法（即不能访问Parent.prototype上定义的方法），因此所有方法属性都写在构造函数中，每次创建实例都会初始化
+
+     * */ 
+
+
+
+  </script>
+</body>
+
+</html>
