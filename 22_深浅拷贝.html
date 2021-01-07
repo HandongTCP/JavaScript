@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 浅拷贝: 对象 B 复制了 A 对象，改变其中的任何一个对象，如果影响到另一个对象，这就是浅拷贝。
+    // 深拷贝: 对象 B 复制了 A 对象，改变其中的任何一个对象，如果互相不影响，那么就是深拷贝。
+    // 关键点：改变其中一个对象，另一个对象是否受到影响
+
+    /**
+     * 一：浅拷贝
+     * */
+    // 拿数组举例，我们可以利用数组的一些方法比如：slice、concat 返回一个新数组的特性来实现拷贝
+    const arr = [
+      "yhd",
+      23,
+      true,
+      null,
+      undefined,
+    ];
+    const copyArray = arr.concat();
+    copyArray[0] = "gsr"
+
+    console.log("arr", arr); // ["yhd", 23, true, null, undefined]
+    console.log("copyArray", copyArray); // ["gsr", 23, true, null, undefined]
+
+    // 由上可以看出，当我们复制这个数组时，由于数组只有一层嵌套，我们改变其中一个数组，另一个数组不会受到影响
+    // 但是当数组内含有一个对象时（即多层嵌套），情况是否还会这样吗？
+
+    const arr2 = ["yhd", { name: "yhd", age: 18 }];
+    const copyArray2 = arr2.concat();
+
+    copyArray2[0] = "gsr";
+    copyArray2[1].name = "gsr";
+
+    console.log("arr2", arr2); // ["yhd", {name: "gsr", age: 18}]
+    console.log("copyArray2", copyArray2); // ["gsr", {name: "gsr", age: 18}]
+
+    // 通过实验发现，单层嵌套的数据，改变其中一个数组的数据，另一个数组不会改变。但是改变嵌套的深层对象的数据时，另一个数组发生了改变
+    // 这种情况我们称为浅拷贝（即拷贝的不彻底，只拷贝一层），反之，改变嵌套的深层对象的数据，另一个数组不发生改变的，称为深拷贝（即完全的拷贝，深层拷贝）
+
+    // 2、ES6的展开...展开运算法也可以实现
+    const arr3 = ["yhd", { name: "yhd", age: 18 }];
+    const copyArray3 = [...arr3];
+
+    copyArray3[0] = "gsr";
+    copyArray3[1].name = "gsr";
+
+    console.log("arr3", arr3); // ["yhd", {name: "gsr", age: 18}]
+    console.log("copyArray3", copyArray3); // ["gsr", {name: "gsr", age: 18}]
+
+    // 3、Array.prototype.slice()也可以实现
+    const arr4 = ["yhd", { name: "yhd", age: 18 }];
+    const copyArray4 = arr4.slice();
+
+    copyArray4[0] = "gsr";
+    copyArray4[1].name = "gsr";
+
+    console.log("arr4", arr4); // ["yhd", {name: "gsr", age: 18}]
+    console.log("copyArray4", copyArray4); // ["gsr", {name: "gsr", age: 18}]
+
+    // 4、Object.assign()也可以实现
+    const arr5 = ["yhd", { name: "yhd", age: 18 }];
+    const copyArray5 = Object.assign([], arr5);
+
+    copyArray5[0] = "gsr";
+    copyArray5[1].name = "gsr";
+
+    console.log("arr5", arr5); // ["yhd", {name: "gsr", age: 18}]
+    console.log("copyArray5", copyArray5); // ["gsr", {name: "gsr", age: 18}]
+
+    // 方法还有许多，这里只象征性的写出几个， 但是都有一个问题，就是拷贝的不彻底，即拷贝一层还是拷贝多层
+    // 同志们，上边是JavaScript的内置方法，我们只会用方法是不会提升的，我们不妨想想怎么自己实现一个浅拷贝，
+    // 其实也不难，无非就是遍历对象，然后把属性和属性值放在一个新对象中
+
+    function shallowCopy(obj) {
+      // 我们只拷贝对象
+      if (typeof obj !== "object") return;
+      // 判断传入的是数组还是对象，然后看看是创建新的对象还是新的数组
+      let newObj = obj instanceof Array ? [] : {};
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          newObj[key] = obj[key];
+        };
+      };
+      return newObj;
+    }
+
+    const arr7 = ["yhd", { name: "yhd", age: 18 }];
+    const copyArray7 = shallowCopy(arr7);
+
+    copyArray7[0] = "gsr";
+    copyArray7[1].name = "gsr";
+
+    console.log("arr7", arr7); // ["yhd", {name: "gsr", age: 18}]
+    console.log("copyArray7", copyArray7); // ["gsr", {name: "gsr", age: 18}]
+
+
+
+
+
+
+
+    // 下面我们来实现一个深拷贝
+
+    /*
+     * 深拷贝(多层嵌套的拷贝)
+     * */
+
+    // 1、JSON.parse(JSON.stringify())
+    const arr6 = ["yhd", { name: "yhd", age: 18, friends: ["tom", "jack"] }, function say() { console.log("I am yhd"); }, undefined, Symbol()];
+    const copyArray6 = JSON.parse(JSON.stringify(arr6))
+
+    copyArray6[0] = "gsr";
+    copyArray6[1].name = "gsr";
+    copyArray6[1].friends.push("rose");
+
+    console.log("arr6", arr6); // ["yhd", {name: "yhd", age: 18, friends: ["tom", "jack"]}, f, undefined, Symbol()]
+    console.log("copyArray6", copyArray6); // ["gsr", {name: "gsr", age: 18, friends: ["tom", "jack", "rose"]}, null, null, null]
+    // 通过实验，我们发现JSON.parse(JSON.stringify())可以完成深拷贝，无论嵌套多少层，
+    // 但是有缺点，无法拷贝函数、undefined，Symbol等，具体原因可以参照MDN关于JSON.stringify的描述
+
+
+
+
+  </script>
+</body>
+
+</html>
