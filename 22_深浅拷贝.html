@@ -126,6 +126,29 @@
     // 通过实验，我们发现JSON.parse(JSON.stringify())可以完成深拷贝，无论嵌套多少层，
     // 但是有缺点，无法拷贝函数、undefined，Symbol等，具体原因可以参照MDN关于JSON.stringify的描述
 
+    // 手动实现深拷贝 (递归)
+    function deepClone(obj) {
+      if (typeof obj !== "object") return;
+      const newObj = obj instanceof Array ? [] : {};
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          // 是对象，同时又不是null的递归处理，其他的直接返回
+          newObj[key] = typeof obj[key] === "object" && Object.prototype.toString.call(obj[key]) !== "[object Null]" ? deepClone(obj[key]) : obj[key];
+        }
+      }
+      return newObj
+    }
+
+    const arr8 = ["yhd", { name: "yhd", age: 18, friends: ["tom", "jack"] }, function say() { console.log("I am yhd"); }, null, undefined, Symbol()];
+    const copyArray8 = deepClone(arr8);
+
+    copyArray8[0] = "gsr";
+    copyArray8[1].name = "gsr";
+    copyArray8[1].friends.push("rose");
+
+    console.log("arr8", arr8); // ["yhd", {name: "yhd", age: 18, friends: ["tom", "jack"]}, f, null, undefined, Symbol()]
+    console.log("copyArray8", copyArray8); // ["gsr", {name: "gsr", age: 18, friends: ["tom", "jack", "rose"]}, f, null undefined, Symbol()]
+
 
 
 
